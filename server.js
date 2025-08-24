@@ -56,13 +56,16 @@ app.use(cors(
     }
 ));
 app.use(express.json());
+app.set('trust proxy', 1);
 app.use(session({
     secret: 'mySecretKey',
     resave: false,
     saveUninitialized: false,
     cookie: {
+        secure: true,
         httpOnly: true,
         secure: false,
+        sameSite: "none",
         maxAge: 1000*60*60*24 //this is a day duration
     }
 }))
