@@ -5,12 +5,12 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import multer from 'multer';
 import session from 'express-session';
+import dotenv from 'dotenv';
 
 
 const app = express();
-const DB_PATH = "mongodb+srv://surajsln570:surajsln570@surajsln.ax3ckws.mongodb.net/myweb?retryWrites=true&w=majority&appName=surajsln"
+dotenv.config();
 
-const PORT = 3000;
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -57,9 +57,17 @@ app.use(userRouter);
 app.use('/admin', adminRouter);
 
 
-//listion to request
-mongoose.connect(DB_PATH).then(
-app.listen(PORT, ()=>{
-    console.log(`server is running on https://localhost:${PORT}`)
+const port = process.env.PORT
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(()=> console.log('mongodb connected'))
+.catch((err)=>{
+    console("mongoDB connection error", err)
 })
-)
+
+//listion to request
+app.listen(port, ()=>{
+    console.log(`server is running on ${port}`)
+})
+
