@@ -35,7 +35,7 @@ const multerOptions = {
 
 //calling middleware}
 app.use(cors(
-    {origin: "https://myportfolio-backend-zxqb.onrender.com",
+    {origin: "https://myportfolio-fronted-qme4agkvq-suraj-singhs-projects-d55d4020.vercel.app'",
          // frontend url
         credentials: true,   //allow cookies
     }
