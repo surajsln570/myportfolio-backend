@@ -8,8 +8,8 @@ import session from 'express-session';
 import dotenv from 'dotenv';
 
 
-const app = express();
 dotenv.config();
+const app = express();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -58,13 +58,15 @@ app.use(userRouter);
 app.use('/admin', adminRouter);
 
 
+const mongoUri = process.env.MONGO_URI
+console.log('mongoUri',mongoUri);
 const port = process.env.PORT
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(()=> console.log('mongodb connected'))
 .catch((err)=>{
-    console("mongoDB connection error", err)
+    console.log("mongoDB connection error", err)
 })
 
 //listion to request
