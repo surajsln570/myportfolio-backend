@@ -35,7 +35,8 @@ const multerOptions = {
 
 //calling middleware}
 app.use(cors(
-    {origin: "http://localhost:5173", // frontend url
+    {origin: "https://myportfolio-backend-zxqb.onrender.com",
+         // frontend url
         credentials: true,   //allow cookies
     }
 ));
@@ -70,4 +71,3 @@ mongoose.connect(process.env.MONGO_URI, {
 app.listen(port, ()=>{
     console.log(`server is running on ${port}`)
 })
-
