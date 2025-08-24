@@ -34,9 +34,23 @@ const multerOptions = {
 }
 
 //calling middleware}
+const allowedOrigins = [
+    'https://myportfolio-fronted-qme4agkvq-suraj-singhs-projects-d55d4020.vercel.app',
+    'http://localhost:5173'
+];
+    
+
+
+
 app.use(cors(
-    {origin: ["https://myportfolio-fronted-qme4agkvq-suraj-singhs-projects-d55d4020.vercel.app'", 'http://localhost:3000'],
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    {origin: function(origin, callback){
+        if(!origin) return callback(null, true)
+        if(allowedOrigins.indexOf(origin)===-1){
+            const msg = `the cors policy does not allow access from this origin: ${origin}`
+            return callback(new Error(msg), false)
+        }
+        return callback(null, true)
+    },
          // frontend url
         credentials: true,   //allow cookies
     }
