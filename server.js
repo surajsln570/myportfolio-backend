@@ -52,7 +52,7 @@ app.use(cors(
         return callback(null, true)
     },
          // frontend url
-        credentials: true   //allow cookies
+        credentials: true,   //allow cookies
     }
 ));
 app.use(express.json());
