@@ -35,7 +35,8 @@ const multerOptions = {
 
 //calling middleware}
 app.use(cors(
-    {origin: "https://myportfolio-fronted-qme4agkvq-suraj-singhs-projects-d55d4020.vercel.app'",
+    {origin: ["https://myportfolio-fronted-qme4agkvq-suraj-singhs-projects-d55d4020.vercel.app'", 'http://localhost:3000'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
          // frontend url
         credentials: true,   //allow cookies
     }
