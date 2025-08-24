@@ -43,9 +43,17 @@ const allowedOrigins = [
 
 
 app.use(cors(
-    {origin: '*',
-         // frontend url
-        credentials: true,   //allow cookies
+    {origin: function(origin, callback){
+        if(!origin){
+            return callback(null, true)
+        }
+        if(allowedOrigins.indexOf(origin)===-1){
+            const msg = `the cors policy doesnt allow access from this origin : ${origin}`
+            return callback(new Error(msg), false)
+        }
+        return callback(null, true);
+    },
+        credentials: true,
     }
 ));
 app.use(express.json());
