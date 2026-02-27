@@ -1,19 +1,22 @@
 import { Projects } from '../modals/projects.js';
 import fs from 'fs'
 
-export const getHomePage = (req, res, next) => {
+export const getHomePage = async (req, res, next) => {
     ///  
-    const data = Projects.find();
-    res.json(data);
+    try {
+        const data = await Projects.find();
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log('error from getHomePage',error);
+        return res.status(500).json({success: false, message: error.message})
+    }
 }
 
-export const postAddProjects = (req, res, next) => {
-    console.log('req.file from adminControler: ', req.file);
-    let imagePath = req.file.path.replace(/\\/g, '/')
-    // Normalize the path for cross-platform compatibility
-    const newImagePath = imagePath.replace('uploads/', '')
+export const postAddProjects = async(req, res, next) => {
+    let newImagePath = req.file.path;
 
-    const { projectName, projectDescription, projectUrl, projectStatus, projectTags, projectDate, projectType } = req.body;
+    const { projectName, projectDescription, projectUrl, projectStatus, projectDate, projectType } = req.body;
+    const projectTags = await JSON.parse(req.body.projectTags);
     const newProject = new Projects({
         projectName,
         projectDescription,
@@ -24,8 +27,6 @@ export const postAddProjects = (req, res, next) => {
         projectDate,
         projectType
     });
-    console.log('newProject from adminControler: ', newProject);
-
 
     newProject.save()
         .then(() => res.status(201).json({ message: 'Project created successfully' }))
@@ -55,9 +56,12 @@ export const getaddProjects = async (req, res, next) => {
     }
 }
 
-export const updateProjects = (req, res, next) => {
+export const updateProjects = async(req, res, next) => {
+    console.log('updateProjects')
     const { id } = req.params;
-    const { projectName, projectDescription, projectUrl, projectStatus, projectTags, projectDate, projectType, projectImage } = req.body;
+    const projectImage = req.file.path;
+    const { projectName, projectDescription, projectUrl, projectStatus, projectDate, projectType} = req.body;
+    const projectTags = await JSON.parse(req.body.projectTags);
     Projects.findByIdAndUpdate(id, {
         projectName,
         projectDescription,
@@ -65,32 +69,43 @@ export const updateProjects = (req, res, next) => {
         projectImage,
         projectTags,
         projectDate,
-        projectType
+        projectType,
+        projectStatus
     }, { new: true })
         .then(updatedProject => res.status(200).json(updatedProject))
         .catch(err => res.status(500).json({ error: err.message }));
 }
 
-export const getProject= async (req, res, next)=>{
-    const {id} = req.params;
+export const getProject = async (req, res, next) => {
+    const { id } = req.params;
     const project = await Projects.findById(id)
     res.json(project);
 }
 
 export const putProject = async (req, res, next) => {
-        let imagePath = req.file.path.replace(/\\/g, '/')
-    // Normalize the path for cross-platform compatibility
-    const newImagePath = imagePath.replace('uploads/', '')
-    const body = req.body
-    const {id} = req.params;
-    const project = await Projects.findById(id);
-    if (project) {
-        fs.unlink(`uploads/${project.projectImage}`, (err) => console.log('error from adminControler', err))
+    try {
+        const body = req.body
+        const { id } = req.params;
+        const project = await Projects.findById(id);
+
+        if (!req.file) {
+            body.projectImage = project.projectImage;
+        } else {
+            if (project) {
+                fs.unlink(`uploads/${project.projectImage}`, (err) => {if(err){console.log('error from adminControler', err)}})
+            }
+            let imagePath = req.file.path.replace(/\\/g, '/')
+            const newImagePath = imagePath.replace('uploads/', '')
+            if (body) {
+                body.projectImage = newImagePath
+            }
+        }
+        const updatedProject = await Projects.findByIdAndUpdate(id, body, { new: true })
+
+        return res.json(updatedProject);
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ success: false, error })
     }
-    if(body){
-        body.projectImage = newImagePath
-    }
-    const updatedProject = await Projects.findByIdAndUpdate(id, body, {new: true})
-    
-    res.json(updatedProject);
 }

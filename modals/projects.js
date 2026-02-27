@@ -16,9 +16,9 @@ const projectsSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    projectTags: {
+    projectTags: [{
         type: String,
-    },
+    }],
     projectStatus: {
         type: String,
         enum: ['active', 'completed', 'archived'],
