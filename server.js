@@ -12,7 +12,7 @@ const app = express();
 
 //calling middleware}
 const allowedOrigins = [
-    'https://myportfolio-fronted-qme4agkvq-suraj-singhs-projects-d55d4020.vercel.app',
+    'https://myportfolio-fronted.vercel.app/',
     'http://localhost:5173'
 ];
 
