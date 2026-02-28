@@ -6,6 +6,7 @@ import { adminRouter } from './routes/adminRouter.js';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import session from 'express-session';
+import { blogRouter } from './routes/blogRoutes.js';
 
 
 const app = express();
@@ -42,6 +43,7 @@ app.use(session({
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(userRouter);
 app.use('/admin', adminRouter);
+app.use("/api/blogs", blogRouter);
 
 const mongoUri = process.env.MONGO_URI
 console.log('mongoUri', mongoUri);
