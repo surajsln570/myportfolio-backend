@@ -14,7 +14,8 @@ const app = express();
 //calling middleware}
 const allowedOrigins = [
     'https://myportfolio-fronted.vercel.app',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    "https://suraj-fullstack-dev.vercel.app"
 ];
 
 app.use(cors(
@@ -52,9 +53,9 @@ mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('mongodb connected'))
-  .catch((err) => {
-    console.log("mongoDB connection error", err)
-})
+    .catch((err) => {
+        console.log("mongoDB connection error", err)
+    })
 
 //listion to request
 app.listen(port, () => {
