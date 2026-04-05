@@ -45,6 +45,9 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(userRouter);
 app.use('/admin', adminRouter);
 app.use("/api/blogs", blogRouter);
+app.get("/ping", (req, res) => {
+  res.send("Server is alive");
+});
 
 const mongoUri = process.env.MONGO_URI
 console.log('mongoUri', mongoUri);
